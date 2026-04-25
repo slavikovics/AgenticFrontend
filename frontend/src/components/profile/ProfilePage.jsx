@@ -1,13 +1,16 @@
-import { Loader2, AlertCircle } from "lucide-react";
-import { Button } from "../ui/button";
-import { Alert, AlertDescription } from "../ui/alert";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { Loader2 } from "lucide-react";
 import { ProfileCard } from "./ProfileCard";
 import { useUser } from "./useUser";
-
+import { useAuth } from "../../hooks/useAuth";
+import { UnauthenticatedState } from "../rag-chat/chat-states/UnauthenticatedState";
 export const ProfilePage = () => {
-  const { user, isLoading, error, reload } = useUser();
+  const navigate = useNavigate();
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
+  const { user, isLoading, error } = useUser();
 
-  if (isLoading) {
+  if (authLoading || isLoading) {
     return (
       <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
@@ -18,25 +21,9 @@ export const ProfilePage = () => {
     );
   }
 
-  if (error && !user) {
-    return (
-      <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center p-6">
-        <div className="w-full max-w-sm">
-          <Alert variant="destructive">
-            <AlertCircle className="h-4 w-4" />
-            <AlertDescription className="flex flex-col gap-3">
-              <span>{error}</span>
-              <Button variant="outline" size="sm" onClick={reload}>
-                Попробовать снова
-              </Button>
-            </AlertDescription>
-          </Alert>
-        </div>
-      </div>
-    );
-  }
+  if (!isAuthenticated) return <UnauthenticatedState />;
 
-  if (!user) return null;
+  if (!user) navigate("/error");
 
   return (
     <div className="min-h-[calc(100vh-4rem)] bg-gray-50 dark:bg-gray-950">
@@ -49,15 +36,6 @@ export const ProfilePage = () => {
             Личная информация аккаунта
           </p>
         </div>
-
-        {/* Ошибка при фоновом рефетче (user уже есть, но reload упал) */}
-        {error && (
-          <Alert variant="destructive" className="mb-4">
-            <AlertCircle className="h-4 w-4" />
-            <AlertDescription>{error}</AlertDescription>
-          </Alert>
-        )}
-
         <ProfileCard user={user} />
       </div>
     </div>

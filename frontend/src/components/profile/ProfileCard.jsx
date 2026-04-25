@@ -9,10 +9,6 @@ const LOCALE_LABELS = {
   en: "English",
 };
 
-/**
- * Чисто презентационная карточка профиля.
- * Не знает ничего об API или стейте — только отображает данные.
- */
 export const ProfileCard = ({ user }) => {
   const initials = getInitials(user.firstName, user.lastName);
 
