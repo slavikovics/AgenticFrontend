@@ -10,7 +10,6 @@ import { NAVIGATION_ITEMS } from "./constants";
 
 export const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
   const { isActive, isInChat, handleNavigate } = useNavigation(() =>
     setIsMobileMenuOpen(false),
   );
@@ -18,10 +17,14 @@ export const Header = () => {
   return (
     <header className="border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 sticky top-0 z-50">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
+        {/* Три колонки: лого | nav | actions
+            grid-cols-[1fr_auto_1fr] гарантирует что левая и правая
+            колонки одинаковой ширины — навигация всегда точно по центру */}
+        <div className="flex justify-between items-center h-16 md:grid md:grid-cols-[1fr_auto_1fr]">
+          {/* Левая колонка — лого */}
           <HeaderLogo />
 
-          {/* Desktop nav */}
+          {/* Центральная колонка — навигация */}
           <nav className="hidden md:flex items-center gap-1">
             {NAVIGATION_ITEMS.map((item) => (
               <NavButton
@@ -35,8 +38,8 @@ export const Header = () => {
             ))}
           </nav>
 
-          {/* Right side actions */}
-          <div className="flex items-center gap-2">
+          {/* Правая колонка — действия, прижаты к правому краю */}
+          <div className="flex items-center gap-2 justify-end">
             <div className="hidden md:flex items-center gap-2">
               <ThemeToggle />
               <AuthComponent />
