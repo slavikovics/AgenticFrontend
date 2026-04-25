@@ -41,7 +41,7 @@ export const UnauthenticatedState = () => (
       </h2>
       <p className="text-sm text-gray-500 dark:text-gray-400 mb-6 leading-relaxed">
         Войдите в аккаунт, чтобы начать общение
-        <br />с ассистентом абитуриента
+        <br />с ассистентом
       </p>
       <div className="flex flex-wrap justify-center gap-2 mb-8">
         {["Умный поиск", "История чатов", "Быстрые ответы"].map((f) => (
