@@ -139,7 +139,6 @@ export function ProfilePage() {
   return (
     <div className="min-h-[calc(100vh-4rem)] bg-gray-50 dark:bg-gray-950">
       <div className="container mx-auto px-4 py-10 max-w-lg">
-        {/* Page title */}
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
             Профиль
@@ -156,11 +155,8 @@ export function ProfilePage() {
           </Alert>
         )}
 
-        {/* Unified card */}
         <div className="rounded-xl border border-border bg-card shadow-sm overflow-hidden">
-          {/* Hero banner + avatar */}
           <div className="relative h-24 bg-gradient-to-r from-blue-500/15 via-primary/10 to-purple-500/10 dark:from-blue-500/10 dark:via-primary/8 dark:to-purple-500/8">
-            {/* Subtle dot grid texture */}
             <div
               className="absolute inset-0 opacity-30"
               style={{
@@ -169,7 +165,6 @@ export function ProfilePage() {
                 backgroundSize: "18px 18px",
               }}
             />
-            {/* Avatar — overlaps banner bottom edge */}
             <div className="absolute -bottom-10 left-1/2 -translate-x-1/2">
               <div className="p-1 rounded-full bg-card shadow-md">
                 <Avatar className="h-20 w-20">
@@ -184,7 +179,6 @@ export function ProfilePage() {
             </div>
           </div>
 
-          {/* Name + ID */}
           <div className="pt-12 pb-5 px-6 text-center border-b border-border">
             <h2 className="text-lg font-semibold text-foreground">
               {displayName}
@@ -195,7 +189,6 @@ export function ProfilePage() {
             </div>
           </div>
 
-          {/* Info rows */}
           <div className="px-6 py-2">
             <InfoRow label="Email" value={user.email} icon={Mail} />
             <InfoRow label="Имя" value={user.firstName} icon={User} />

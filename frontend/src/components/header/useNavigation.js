@@ -1,13 +1,6 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { useCallback } from "react";
 
-/**
- * Инкапсулирует логику активного роута и навигации.
- *
- * isInChat  — пользователь находится внутри конкретного чата
- * isActive  — принимает path, возвращает true если роут активен
- * navigate  — переход с закрытием мобильного меню (передаётся onNavigate)
- */
 export const useNavigation = (onNavigate) => {
   const navigate = useNavigate();
   const location = useLocation();

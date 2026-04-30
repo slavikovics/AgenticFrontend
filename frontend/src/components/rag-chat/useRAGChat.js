@@ -6,16 +6,6 @@ import * as chatApi from "../../api/chatApi";
 
 const WS_URL = "ws://localhost:8000/api/v1/ws/query";
 
-/**
- * Вся логика страницы RAGChat:
- * - загрузка истории при смене urlSessionId
- * - создание сессии при первом сообщении
- * - отправка и сохранение сообщений
- * - преобразование WS-событий в story cards
- * - автоскролл
- *
- * Возвращает только то, что нужно для рендера.
- */
 export const useRAGChat = ({ model, mode }) => {
   const { sessionId: urlSessionId } = useParams();
 
@@ -26,7 +16,6 @@ export const useRAGChat = ({ model, mode }) => {
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
   const [sessionError, setSessionError] = useState(null);
 
-  // Рефы для доступа к актуальным значениям внутри колбэков без лишних зависимостей
   const streamingEventsRef = useRef([]);
   const currentSessionIdRef = useRef(urlSessionId ?? null);
   const messagesEndRef = useRef(null);
@@ -40,7 +29,6 @@ export const useRAGChat = ({ model, mode }) => {
     sendQuery,
   } = useRAGWebSocket(WS_URL);
 
-  // ── История: сброс + загрузка при смене сессии ────────────────────────────
   useEffect(() => {
     const sid = urlSessionId ?? null;
     setSessionId(sid);
@@ -77,12 +65,10 @@ export const useRAGChat = ({ model, mode }) => {
       .finally(() => setIsLoadingHistory(false));
   }, [urlSessionId]);
 
-  // ── Синхронизация рефа событий ────────────────────────────────────────────
   useEffect(() => {
     streamingEventsRef.current = streamingEvents;
   }, [streamingEvents]);
 
-  // ── Автоскролл ────────────────────────────────────────────────────────────
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({
       behavior: "smooth",
@@ -94,7 +80,6 @@ export const useRAGChat = ({ model, mode }) => {
     scrollToBottom();
   }, [messages, streamingEvents, scrollToBottom]);
 
-  // ── Ленивое создание сессии (только для новых чатов без URL-сессии) ───────
   const ensureSession = useCallback(
     async (firstMessage) => {
       if (currentSessionIdRef.current) return currentSessionIdRef.current;
@@ -116,7 +101,6 @@ export const useRAGChat = ({ model, mode }) => {
     [mode, model],
   );
 
-  // ── WS-события → story cards ──────────────────────────────────────────────
   useEffect(() => {
     if (events.length === 0 && !thinking) return;
     const newEvent = events[events.length - 1];
@@ -157,7 +141,6 @@ export const useRAGChat = ({ model, mode }) => {
     ]);
   }, [thinking, isProcessing]);
 
-  // ── Финальный ответ → сохранение ─────────────────────────────────────────
   useEffect(() => {
     if (!currentAnswer || isProcessing || !streamingMessage) return;
 
@@ -193,7 +176,6 @@ export const useRAGChat = ({ model, mode }) => {
     }
   }, [currentAnswer, isProcessing, streamingMessage]);
 
-  // ── Отправка сообщения ────────────────────────────────────────────────────
   const handleSendMessage = useCallback(
     async (messageText) => {
       if (!messageText.trim() || isProcessing) return;

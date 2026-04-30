@@ -83,13 +83,6 @@ class ChatService {
     return result || [];
   }
 
-  /**
-   * Save a message by stuffing the full message object as a JSON string
-   * into the `content` field. Only the three [Required] fields are sent —
-   * chatSessionId, role, and content — so there are zero validation issues.
-   *
-   * To read back: JSON.parse(message.content)
-   */
   async saveMessage(chatSessionId, role, messageObject) {
     return this.request("/messages", {
       method: "POST",

@@ -1,7 +1,3 @@
-/**
- * Преобразует сырое WS-событие в объект story card для отображения.
- * Чистая функция — без стейта, без сайд-эффектов.
- */
 export const eventToStoryCard = (event) => {
   const ts = new Date().toLocaleTimeString();
   const id = () => `${Date.now()}_${Math.random()}`;

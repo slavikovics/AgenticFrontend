@@ -8,10 +8,6 @@ import { COMPACT_STYLES, FULL_STYLES } from "./markdownStyles";
 import { CodeBlock } from "./components/CodeBlock";
 import { makeComponents } from "./components/markdownComponents";
 
-/**
- * Заменяет одиночные backtick-обёртки на **bold**,
- * так как инлайн-код в этом контексте используется как выделение.
- */
 const fixInlineCode = (content) => {
   if (!content) return content;
   if (typeof content !== "string") return JSON.stringify(content, null, 2);
@@ -32,8 +28,6 @@ export const SimpleMarkdownContent = ({
 
   const components = useMemo(
     () => makeComponents({ styles, isDarkMode, codeStyle, mounted, CodeBlock }),
-    // styles — объект-константа, не меняется. isDarkMode/mounted — примитивы.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [isDarkMode, codeStyle, mounted, compact],
   );
 

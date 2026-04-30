@@ -2,12 +2,6 @@ import { useState, useEffect } from "react";
 import { isTokenExpiredOrExpiring, getValidToken } from "../utils/tokenUtils";
 import { refreshToken } from "../api/authFetch";
 
-/**
- * Публичный хук для проверки статуса аутентификации.
- * Используется в любом компоненте приложения.
- *
- * @returns {{ user, isAuthenticated, isLoading, getToken }}
- */
 export const useAuth = () => {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -28,7 +22,6 @@ export const useAuth = () => {
         return;
       }
 
-      // Токен истёк — пробуем обновить
       try {
         await refreshToken();
         const refreshedUser = localStorage.getItem("user_data");

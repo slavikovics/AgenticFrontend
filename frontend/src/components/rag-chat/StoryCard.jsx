@@ -96,7 +96,6 @@ const colorConfig = {
   },
 };
 
-// Component for displaying document results
 const DocumentResults = ({ documents }) => {
   const [expandedDoc, setExpandedDoc] = useState(null);
 
@@ -178,7 +177,6 @@ export const StoryCard = ({ card }) => {
 
   if (card.isAnswer) return null;
 
-  // Parse document results if present
   const hasDocuments =
     card.documents &&
     Array.isArray(card.documents) &&

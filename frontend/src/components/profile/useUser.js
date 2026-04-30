@@ -1,10 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { userApi } from "../../api/userApi";
 
-/**
- * Загружает данные текущего пользователя.
- * Возвращает { user, isLoading, error, reload }
- */
 export const useUser = () => {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);

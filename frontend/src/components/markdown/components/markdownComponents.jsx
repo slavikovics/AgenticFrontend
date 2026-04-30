@@ -1,8 +1,3 @@
-/**
- * Презентационные компоненты для ReactMarkdown.
- * Принимают styles (из markdownStyles.js) через фабричную функцию makeComponents.
- */
-
 export const makeComponents = ({
   styles,
   isDarkMode,
@@ -10,7 +5,6 @@ export const makeComponents = ({
   mounted,
   CodeBlock,
 }) => ({
-  // ── Headings ──────────────────────────────────────────────────────────
   h1: ({ children }) => <h1 className={styles.h1}>{children}</h1>,
   h2: ({ children }) => <h2 className={styles.h2}>{children}</h2>,
   h3: ({ children }) => <h3 className={styles.h3}>{children}</h3>,
@@ -26,7 +20,6 @@ export const makeComponents = ({
     </h6>
   ),
 
-  // ── Inline text ───────────────────────────────────────────────────────
   p: ({ children }) => <p className={styles.p}>{children}</p>,
   strong: ({ children }) => (
     <strong className="font-semibold text-gray-900 dark:text-white">

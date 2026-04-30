@@ -142,7 +142,6 @@ export const ChatInput = memo(
                 <WifiOff className="h-4 w-4 animate-pulse" />
               )}
 
-              {/* Tooltip */}
               <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 px-2 py-1 rounded-md bg-gray-900 text-white text-xs whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
                 {isConnected
                   ? "WebSocket подключен"
@@ -150,7 +149,6 @@ export const ChatInput = memo(
               </div>
             </button>
 
-            {/* Model Selector */}
             {models.length > 0 && (
               <div className="relative" ref={modelSelectRef}>
                 <button
@@ -210,7 +208,6 @@ export const ChatInput = memo(
               </div>
             )}
 
-            {/* Text Input */}
             <div className="flex-1 relative">
               <div
                 className={`
@@ -259,7 +256,6 @@ export const ChatInput = memo(
               </div>
             </div>
 
-            {/* Send Button */}
             <button
               onClick={handleSend}
               disabled={isLoading || !value.trim() || disabled || !isConnected}

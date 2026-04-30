@@ -94,7 +94,6 @@ export const ChatCard = ({
         hover:border-primary/50 hover:shadow-md hover:-translate-y-px
       "
     >
-      {/* ── Edit — top-left corner ── */}
       {!isEditing && (
         <button
           onClick={handleStartEdit}
@@ -105,7 +104,6 @@ export const ChatCard = ({
         </button>
       )}
 
-      {/* ── Delete — top-right corner ── */}
       {!isEditing && (
         <button
           onClick={handleDelete}
@@ -121,9 +119,7 @@ export const ChatCard = ({
         </button>
       )}
 
-      {/* ── Center body: title (2/3) + count (1/3) ── */}
       <div className="flex flex-col items-center justify-center flex-1 px-5 py-5 gap-0">
-        {/* Title block — 2/3 of center area */}
         <div
           className="flex w-full items-center justify-center"
           style={{ flex: "2" }}
@@ -175,10 +171,8 @@ export const ChatCard = ({
           )}
         </div>
 
-        {/* Divider */}
         <div className="w-8 h-px bg-border my-3 flex-shrink-0" />
 
-        {/* Message count block — 1/3 of center area */}
         <div
           className="flex items-center justify-center gap-2 flex-shrink-0"
           style={{ flex: "1" }}
@@ -193,7 +187,6 @@ export const ChatCard = ({
         </div>
       </div>
 
-      {/* ── Bottom: dates ── */}
       <div className="flex items-center justify-between px-4 py-3 border-t border-border flex-shrink-0">
         <div className="flex items-center gap-1.5 text-xs text-muted-foreground min-w-0">
           <Calendar className="h-3.5 w-3.5 flex-shrink-0" />

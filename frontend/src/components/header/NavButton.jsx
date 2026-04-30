@@ -1,15 +1,6 @@
 import { MessageSquareText } from "lucide-react";
 import { Button } from "../ui/button";
 
-/**
- * Кнопка навигации.
- *
- * @param {object}   item        — элемент из NAVIGATION_ITEMS
- * @param {boolean}  active      — подсвечивать как активный роут
- * @param {boolean}  isInChat    — пользователь внутри чата (для badge)
- * @param {function} onClick
- * @param {"desktop"|"mobile"}  variant
- */
 export const NavButton = ({
   item,
   active,

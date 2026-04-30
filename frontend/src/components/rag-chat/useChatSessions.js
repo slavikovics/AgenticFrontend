@@ -2,10 +2,6 @@ import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import * as chatApi from "../../api/chatApi";
 
-/**
- * Управляет списком сессий для ChatsPage:
- * загрузка, создание, удаление, переименование.
- */
 export const useChatSessions = ({ isAuthenticated, authLoading }) => {
   const navigate = useNavigate();
   const [sessions, setSessions] = useState([]);
@@ -19,7 +15,6 @@ export const useChatSessions = ({ isAuthenticated, authLoading }) => {
       const data = await chatApi.getChatSessions();
       setSessions(data || []);
     } catch {
-      // Ошибку можно пробросить наружу если нужен error state в UI
     } finally {
       setIsLoading(false);
     }
@@ -41,7 +36,6 @@ export const useChatSessions = ({ isAuthenticated, authLoading }) => {
       setSessions((prev) => [newSession, ...prev]);
       navigate(`/rag-chat/${newSession.id}`);
     } catch {
-      // TODO: показать toast/уведомление
     } finally {
       setIsCreating(false);
     }
