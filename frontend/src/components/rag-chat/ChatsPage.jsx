@@ -155,7 +155,6 @@ export const ChatsPage = () => {
         )}
       </div>
 
-      {/* Глобальный оверлей создания */}
       {isCreating && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
           <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 px-5 py-4 flex items-center gap-3 shadow-xl">
