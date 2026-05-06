@@ -1,11 +1,3 @@
-/**
- * API для работы с чатами.
- *
- * Намеренно использует обычный fetch — он уже перехвачен installFetchInterceptor(),
- * который автоматически добавляет токен и обновляет его при необходимости.
- * Не нужно управлять токеном вручную здесь.
- */
-
 const API_BASE_URL =
   import.meta.env.VITE_APP_API_URL || "http://localhost:8081";
 
@@ -27,9 +19,7 @@ const request = async (endpoint, options = {}) => {
     let errorBody = null;
     try {
       errorBody = await response.json();
-    } catch {
-      /* ignore */
-    }
+    } catch {}
     throw new Error(
       errorBody?.message ||
         errorBody?.title ||
@@ -72,10 +62,6 @@ export const getChatMessages = async (sessionId) => {
   return result || [];
 };
 
-/**
- * Сохраняет сообщение, сериализуя полный объект в поле content.
- * Для чтения: JSON.parse(message.content)
- */
 export const saveMessage = (chatSessionId, role, messageObject) =>
   request("/messages", {
     method: "POST",

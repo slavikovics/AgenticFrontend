@@ -38,10 +38,6 @@ const CodeBlockHeader = ({ displayName, copyLabel, onCopy }) => (
   </div>
 );
 
-/**
- * Блок кода с подсветкой синтаксиса и кнопкой копирования.
- * Показывает plain <pre> до монтирования (SSR/hydration).
- */
 export const CodeBlock = ({
   className,
   children,
