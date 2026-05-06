@@ -10,8 +10,9 @@ export const useRAGWebSocket = (url) => {
 
   const wsRef = useRef(null);
   const eventHandlersRef = useRef({});
+  const urlRef = useRef(url);
 
-  // Register event handlers
+  // Register event handler
   const on = useCallback((eventType, handler) => {
     eventHandlersRef.current[eventType] = handler;
   }, []);
@@ -21,21 +22,33 @@ export const useRAGWebSocket = (url) => {
     delete eventHandlersRef.current[eventType];
   }, []);
 
-  // Connect to WebSocket
-  const connect = useCallback(() => {
-    if (wsRef.current?.readyState === WebSocket.OPEN) {
-      console.log("WebSocket already connected");
-      return;
+  const disconnect = useCallback(() => {
+    if (wsRef.current) {
+      wsRef.current.onclose = null; // prevent reconnect loop
+      wsRef.current.close();
+      wsRef.current = null;
+    }
+    setIsConnected(false);
+    setIsProcessing(false);
+  }, []);
+
+  const connect = useCallback((targetUrl) => {
+    // Close existing connection first
+    if (wsRef.current) {
+      wsRef.current.onclose = null;
+      wsRef.current.close();
+      wsRef.current = null;
     }
 
-    const ws = new WebSocket(url);
+    setIsConnected(false);
+    setError(null);
+
+    const ws = new WebSocket(targetUrl);
     wsRef.current = ws;
 
     ws.onopen = () => {
-      console.log("WebSocket connected");
       setIsConnected(true);
       setError(null);
-
       if (eventHandlersRef.current["open"]) {
         eventHandlersRef.current["open"]();
       }
@@ -44,49 +57,40 @@ export const useRAGWebSocket = (url) => {
     ws.onmessage = (event) => {
       try {
         const message = JSON.parse(event.data);
-
-        // Add to event history
         setEvents((prev) => [...prev, message]);
 
-        // Handle different message types
         switch (message.type) {
           case "thinking":
             if (eventHandlersRef.current["thinking"]) {
               eventHandlersRef.current["thinking"](message.content);
             }
             break;
-
           case "iteration_start":
             if (eventHandlersRef.current["iteration_start"]) {
               eventHandlersRef.current["iteration_start"](message.data);
             }
             break;
-
           case "llm_response":
             if (eventHandlersRef.current["llm_response"]) {
               eventHandlersRef.current["llm_response"](message.data);
             }
             break;
-
           case "tool_call":
             if (eventHandlersRef.current["tool_call"]) {
               eventHandlersRef.current["tool_call"](message.data);
             }
             break;
-
           case "tool_result":
             if (eventHandlersRef.current["tool_result"]) {
               eventHandlersRef.current["tool_result"](message.data);
             }
             break;
-
           case "answer":
             setCurrentAnswer(message.content);
             if (eventHandlersRef.current["answer"]) {
               eventHandlersRef.current["answer"](message.content);
             }
             break;
-
           case "complete":
             setIsProcessing(false);
             if (eventHandlersRef.current["complete"]) {
@@ -95,7 +99,6 @@ export const useRAGWebSocket = (url) => {
               );
             }
             break;
-
           case "error":
             setError(message.content);
             setIsProcessing(false);
@@ -103,9 +106,7 @@ export const useRAGWebSocket = (url) => {
               eventHandlersRef.current["error"](message.content);
             }
             break;
-
           default:
-            console.log("Unknown message type:", message.type);
             if (eventHandlersRef.current[message.type]) {
               eventHandlersRef.current[message.type](message);
             }
@@ -116,71 +117,58 @@ export const useRAGWebSocket = (url) => {
       }
     };
 
-    ws.onerror = (error) => {
-      console.error("WebSocket error:", error);
+    ws.onerror = () => {
       setError("WebSocket connection error");
       setIsConnected(false);
-
       if (eventHandlersRef.current["error"]) {
         eventHandlersRef.current["error"]("Connection error");
       }
     };
 
     ws.onclose = () => {
-      console.log("WebSocket disconnected");
       setIsConnected(false);
       setIsProcessing(false);
-
       if (eventHandlersRef.current["close"]) {
         eventHandlersRef.current["close"]();
       }
     };
-  }, [url]);
-
-  // Disconnect WebSocket
-  const disconnect = useCallback(() => {
-    if (wsRef.current) {
-      wsRef.current.close();
-      wsRef.current = null;
-    }
   }, []);
 
-  // Send query
+  // Reconnect when URL changes
+  useEffect(() => {
+    if (url !== urlRef.current) {
+      urlRef.current = url;
+    }
+    connect(url);
+    return () => {
+      if (wsRef.current) {
+        wsRef.current.onclose = null;
+        wsRef.current.close();
+        wsRef.current = null;
+      }
+    };
+  }, [url, connect]);
+
   const sendQuery = useCallback((query, options = {}) => {
     if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) {
       setError("WebSocket is not connected");
       return false;
     }
-
     const message = {
       type: "query",
-      payload: {
-        query,
-        ...options,
-      },
+      payload: { query, ...options },
     };
-
     wsRef.current.send(JSON.stringify(message));
     setIsProcessing(true);
     setCurrentAnswer("");
     setEvents([]);
     setError(null);
-
     return true;
   }, []);
 
-  // Clear events
   const clearEvents = useCallback(() => {
     setEvents([]);
   }, []);
-
-  // Auto-connect on mount
-  useEffect(() => {
-    connect();
-    return () => {
-      disconnect();
-    };
-  }, [connect, disconnect]);
 
   return {
     isConnected,

@@ -1,9 +1,13 @@
+import { useState } from "react";
 import { ChatInput } from "./ChatInput";
 import { StreamingMessage } from "./StreamingMessage";
 import { FinalMessage } from "./FinalMessage";
 import { useRAGChat } from "./useRAGChat";
+import { RAG_SERVICES, DEFAULT_SERVICE } from "./ragServices";
 
 const RAGChat = ({ model = "claude-sonnet-4-20250514", mode = "rag" }) => {
+  const [selectedService, setSelectedService] = useState(DEFAULT_SERVICE);
+
   const {
     messages,
     streamingMessage,
@@ -15,7 +19,12 @@ const RAGChat = ({ model = "claude-sonnet-4-20250514", mode = "rag" }) => {
     currentAnswer,
     messagesEndRef,
     handleSendMessage,
-  } = useRAGChat({ model, mode });
+  } = useRAGChat({ model, mode, wsUrl: selectedService.wsUrl });
+
+  const handleServiceChange = (serviceId) => {
+    const service = RAG_SERVICES.find((s) => s.id === serviceId);
+    if (service) setSelectedService(service);
+  };
 
   return (
     <div className="w-full h-full flex flex-col">
@@ -77,9 +86,9 @@ const RAGChat = ({ model = "claude-sonnet-4-20250514", mode = "rag" }) => {
         placeholder="Задайте вопрос..."
         disabled={!isConnected}
         isConnected={isConnected}
-        models={[]}
-        selectedModel=""
-        onModelChange={() => {}}
+        services={RAG_SERVICES}
+        selectedServiceId={selectedService.id}
+        onServiceChange={handleServiceChange}
       />
     </div>
   );

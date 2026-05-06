@@ -4,9 +4,7 @@ import { useRAGWebSocket } from "./useRAGWebSocket";
 import { eventToStoryCard } from "./useStreamingEvents";
 import * as chatApi from "../../api/chatApi";
 
-const WS_URL = "ws://localhost:8000/api/v1/ws/query";
-
-export const useRAGChat = ({ model, mode }) => {
+export const useRAGChat = ({ model, mode, wsUrl }) => {
   const { sessionId: urlSessionId } = useParams();
 
   const [messages, setMessages] = useState([]);
@@ -27,7 +25,7 @@ export const useRAGChat = ({ model, mode }) => {
     currentAnswer,
     thinking,
     sendQuery,
-  } = useRAGWebSocket(WS_URL);
+  } = useRAGWebSocket(wsUrl);
 
   useEffect(() => {
     const sid = urlSessionId ?? null;

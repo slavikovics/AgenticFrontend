@@ -91,7 +91,7 @@ export const ChatCard = ({
         bg-card text-card-foreground shadow-sm
         cursor-pointer select-none
         transition-all duration-200
-        hover:border-primary/50 hover:shadow-md hover:-translate-y-px
+        hover:border-primary/20 hover:shadow-md hover:-translate-y-px
       "
     >
       {!isEditing && (
@@ -139,7 +139,7 @@ export const ChatCard = ({
                 className="
                   flex-1 min-w-0 px-2 py-1 text-sm font-semibold rounded-md resize-none
                   border border-input bg-background text-center
-                  focus:outline-none focus:ring-2 focus:ring-ring/30 focus:border-ring
+                  focus:outline-none focus:ring-1 focus:ring-ring/30 focus:border-ring/30
                   disabled:opacity-50
                 "
               />

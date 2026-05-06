@@ -13,7 +13,7 @@ export const HeaderLogo = () => {
         <GraduationCap className="h-5 w-5 text-primary-foreground" />
       </div>
       <span className="text-base font-semibold text-foreground hidden sm:block leading-tight">
-        Ассистент
+        Ассистент абитуриента
       </span>
       <span className="text-base font-semibold text-foreground sm:hidden leading-tight">
         Ассистент
