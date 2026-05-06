@@ -25,6 +25,8 @@ public class ChatSession
     public DateTime UpdatedAt { get; set; }
  
     public bool IsActive { get; set; } = true;
+    
+    public bool HasCustomName { get; set; } = false;
  
     // Navigation
     public virtual ICollection<ChatMessage> Messages { get; set; }

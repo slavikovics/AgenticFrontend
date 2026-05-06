@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using System.Text.Json;
 
 namespace backend.Controllers;
 
@@ -126,6 +127,7 @@ public class ChatController : ControllerBase
         if (session == null) return NotFound();
 
         session.Title = dto.Title;
+        session.HasCustomName = true;
         session.UpdatedAt = DateTime.UtcNow;
         await _context.SaveChangesAsync();
 
@@ -188,7 +190,7 @@ public class ChatController : ControllerBase
 
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
-        var session = await _context.ChatSessions
+        var session = await _context.ChatSessions.Include(chatSession => chatSession.Messages)
             .FirstOrDefaultAsync(s => s.Id == dto.ChatSessionId && s.UserId == userId.Value);
 
         if (session == null) return NotFound();
@@ -206,6 +208,23 @@ public class ChatController : ControllerBase
 
         _context.ChatMessages.Add(message);
         session.UpdatedAt = DateTime.UtcNow;
+        if (!session.HasCustomName && message.Role == "user")
+        {
+            try
+            {
+                using var doc = JsonDocument.Parse(message.Content);
+                var title = doc.RootElement.GetProperty("content").GetString();
+                if (title != null)
+                {
+                    session.Title = title;
+                    _logger.LogInformation("Updated session title for session {SessionId}", session.Id);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to deserialize message: {ex.Message}");
+            }
+        }
 
         try
         {
